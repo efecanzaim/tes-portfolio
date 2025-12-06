@@ -82,7 +82,7 @@ export function Navigation() {
           {/* Logo */}
           <motion.a
             href="#hero"
-            className="flex items-center"
+            className="flex items-center relative h-16"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={(e) => {
@@ -95,7 +95,7 @@ export function Navigation() {
               alt="Logo"
               width={220}
               height={80}
-              className="h-16 w-auto"
+              className="h-16 w-auto relative z-10"
               priority
             />
           </motion.a>
