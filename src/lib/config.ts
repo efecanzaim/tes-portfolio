@@ -1,5 +1,5 @@
 // GitHub Pages için basePath
-export const basePath = process.env.NODE_ENV === 'production' ? '/tes-portfolio' : '';
+export const basePath = '';
 
 // Görsel yollarını basePath ile birleştir
 export const getImagePath = (path: string) => `${basePath}${path}`;
