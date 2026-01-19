@@ -1,12 +1,10 @@
 "use client";
 
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Image from "next/image";
-import { getImagePath } from "@/lib/config";
 
 const navLinks = [
   { href: "#hero", label: "Lorem" },
@@ -18,8 +16,6 @@ const navLinks = [
 ];
 
 export function Navigation() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   
@@ -27,14 +23,10 @@ export function Navigation() {
   const headerBg = useTransform(
     scrollY,
     [0, 100],
-    ["rgba(0, 0, 0, 0)", "var(--glass-bg)"]
+    ["rgba(0, 0, 0, 0)", "rgba(255, 255, 255, 0.72)"]
   );
   const headerBlur = useTransform(scrollY, [0, 100], [0, 20]);
   const headerScale = useTransform(scrollY, [0, 100], [1, 0.98]);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Track active section
   useEffect(() => {
@@ -91,7 +83,7 @@ export function Navigation() {
             }}
           >
             <Image
-              src={getImagePath("/logo.svg")}
+              src="/logo.svg"
               alt="Logo"
               width={220}
               height={80}
@@ -132,41 +124,6 @@ export function Navigation() {
 
           {/* Right side actions */}
           <div className="flex items-center gap-3">
-            {/* Theme toggle */}
-            {mounted && (
-              <motion.button
-                className="w-10 h-10 rounded-full glass flex items-center justify-center"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                aria-label="Toggle theme"
-              >
-                <AnimatePresence mode="wait">
-                  {theme === "dark" ? (
-                    <motion.div
-                      key="sun"
-                      initial={{ rotate: -90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Sun className="w-5 h-5" />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="moon"
-                      initial={{ rotate: 90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Moon className="w-5 h-5" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            )}
-
             {/* CTA button - desktop */}
             <Button
               className="hidden md:flex rounded-full"

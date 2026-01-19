@@ -2,7 +2,6 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { getImagePath } from "@/lib/config";
 import { useRef, useState, useEffect } from "react";
 import { ArrowUpRight, Circle, Minus } from "lucide-react";
 
@@ -46,7 +45,7 @@ export function About() {
                         y: isMobile ? 0 : y, 
                         rotate: isMobile ? 0 : rotate 
                     }} 
-                    className="relative aspect-[3/4] w-full max-w-md mx-auto z-30"
+                    className="relative aspect-3/4 w-full max-w-md mx-auto z-30"
                 >
                     {/* Frame Element */}
                     <div className="absolute inset-0 border border-primary/30 translate-x-4 translate-y-4 z-0" />
@@ -54,7 +53,7 @@ export function About() {
                     {/* Main Image Container */}
                     <div className="relative z-10 w-full h-full overflow-hidden bg-muted group">
                         <Image
-                            src={getImagePath("/tes.jpg")}
+                            src="/tes.jpg"
                             alt="Portrait"
                             fill
                             className="object-cover transition-all duration-700 ease-out group-hover:scale-105 grayscale group-hover:grayscale-0"

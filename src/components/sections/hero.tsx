@@ -7,7 +7,6 @@ import { Spotlight } from "@/components/ui/spotlight";
 import { HexagonBackground } from "@/components/ui/hexagon-background";
 import { RevealImageListItem } from "@/components/ui/reveal-images";
 import Image from "next/image";
-import { getImagePath } from "@/lib/config";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -48,7 +47,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background/[0.96] antialiased"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background/0.96 antialiased"
     >
       <HexagonBackground />
       <Spotlight
@@ -196,7 +195,7 @@ export function Hero() {
                   />
                 </svg>
                 <Image
-                  src={getImagePath("/logo.png")}
+                  src="/logo.png"
                   alt="Logo"
                   width={220}
                   height={80}
