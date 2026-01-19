@@ -47,7 +47,7 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background/0.96 antialiased"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background/95 antialiased"
     >
       <HexagonBackground />
       <Spotlight
