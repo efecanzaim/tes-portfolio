@@ -5,56 +5,39 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
-  { href: "#hero", label: "Lorem" },
-  { href: "#about", label: "Ipsum" },
-  { href: "#projects", label: "Dolor" },
-  { href: "#skills", label: "Sit" },
-  { href: "#experience", label: "Amet" },
-  { href: "#contact", label: "Consectetur" },
+  { href: "/", label: "Ana Sayfa" },
+  { href: "/hakkimda", label: "Hakkımda" },
+  { href: "/arastirmalar", label: "Araştırmalar" },
+  { href: "/yayinlar", label: "Yayınlar" },
+  { href: "/dersler", label: "Dersler" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("hero");
-  
+  const pathname = usePathname();
+
   const { scrollY } = useScroll();
   const headerBg = useTransform(
     scrollY,
     [0, 100],
-    ["rgba(0, 0, 0, 0)", "rgba(255, 255, 255, 0.72)"]
+    ["rgba(0, 0, 0, 0)", "rgba(10, 10, 10, 0.9)"]
   );
   const headerBlur = useTransform(scrollY, [0, 100], [0, 20]);
   const headerScale = useTransform(scrollY, [0, 100], [1, 0.98]);
 
-  // Track active section
+  // Close mobile menu on route change
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
-      },
-      { threshold: 0.3, rootMargin: "-100px 0px -100px 0px" }
-    );
-
-    navLinks.forEach((link) => {
-      const element = document.querySelector(link.href);
-      if (element) observer.observe(element);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  const handleNavClick = (href: string) => {
     setIsOpen(false);
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+  }, [pathname]);
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
   };
 
   return (
@@ -72,65 +55,57 @@ export function Navigation() {
           style={{ scale: headerScale }}
         >
           {/* Logo */}
-          <motion.a
-            href="#hero"
-            className="flex items-center relative h-16"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick("#hero");
-            }}
-          >
-            <Image
-              src="/logo.svg"
-              alt="Logo"
-              width={220}
-              height={80}
-              className="h-16 w-auto relative z-10"
-              priority
-            />
-          </motion.a>
+          <Link href="/">
+            <motion.div
+              className="flex items-center relative h-16"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Image
+                src="/logo.svg"
+                alt="Logo"
+                width={220}
+                height={80}
+                className="h-16 w-auto relative z-10"
+                priority
+              />
+            </motion.div>
+          </Link>
 
           {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
-              <motion.a
-                key={link.href}
-                href={link.href}
-                className={`relative px-4 py-2 text-sm font-medium transition-colors ${
-                  activeSection === link.href.slice(1)
-                    ? "text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavClick(link.href);
-                }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {link.label}
-                {activeSection === link.href.slice(1) && (
-                  <motion.div
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary"
-                    layoutId="activeSection"
-                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </motion.a>
+              <Link key={link.href} href={link.href}>
+                <motion.div
+                  className={`relative px-4 py-2 text-sm font-medium transition-colors ${
+                    isActive(link.href)
+                      ? "text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {link.label}
+                  {isActive(link.href) && (
+                    <motion.div
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary"
+                      layoutId="activeNav"
+                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </motion.div>
+              </Link>
             ))}
           </div>
 
           {/* Right side actions */}
           <div className="flex items-center gap-3">
             {/* CTA button - desktop */}
-            <Button
-              className="hidden md:flex rounded-full"
-              onClick={() => handleNavClick("#contact")}
-            >
-              Lorem Ipsum
-            </Button>
+            <Link href="/iletisim">
+              <Button className="hidden md:flex rounded-full">
+                İletişim
+              </Button>
+            </Link>
 
             {/* Mobile menu toggle */}
             <motion.button
@@ -191,24 +166,20 @@ export function Navigation() {
             >
               <div className="space-y-2">
                 {navLinks.map((link, index) => (
-                  <motion.a
-                    key={link.href}
-                    href={link.href}
-                    className={`block px-4 py-3 rounded-xl text-lg font-medium transition-colors ${
-                      activeSection === link.href.slice(1)
-                        ? "bg-primary/10 text-primary"
-                        : "hover:bg-secondary"
-                    }`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleNavClick(link.href);
-                    }}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    {link.label}
-                  </motion.a>
+                  <Link key={link.href} href={link.href}>
+                    <motion.div
+                      className={`block px-4 py-3 rounded-xl text-lg font-medium transition-colors ${
+                        isActive(link.href)
+                          ? "bg-primary/10 text-primary"
+                          : "hover:bg-secondary"
+                      }`}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                    >
+                      {link.label}
+                    </motion.div>
+                  </Link>
                 ))}
               </div>
 
@@ -218,12 +189,11 @@ export function Navigation() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                <Button
-                  className="w-full rounded-full"
-                  onClick={() => handleNavClick("#contact")}
-                >
-                  Lorem Ipsum
-                </Button>
+                <Link href="/iletisim">
+                  <Button className="w-full rounded-full">
+                    İletişim
+                  </Button>
+                </Link>
               </motion.div>
             </motion.nav>
           </motion.div>
