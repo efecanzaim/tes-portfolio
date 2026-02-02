@@ -124,7 +124,7 @@ const AnimatedTabs = ({
                   }}
                   transition={{
                     duration: 0.4,
-                    ease: "easeOut",
+                    ease: "easeOut" as const,
                   }}
                   className="w-full"
                 >
